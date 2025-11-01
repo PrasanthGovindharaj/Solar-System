@@ -15,7 +15,11 @@ const Index = () => {
     : null;
 
   const handlePlanetClick = (planetId: string) => {
-    setSelectedPlanetId(planetId);
+    if (planetId) {
+      setSelectedPlanetId(planetId);
+    } else {
+      setSelectedPlanetId(null);
+    }
   };
 
   const handleViewDetails = () => {
@@ -37,7 +41,7 @@ const Index = () => {
               </p>
             </div>
             {selectedPlanet && (
-              <Button onClick={handleViewDetails} variant="secondary" size="sm">
+              <Button onClick={handleViewDetails} variant="space" size="sm" className="animate-fade-in">
                 <Info className="w-4 h-4 mr-2" />
                 Full Details
               </Button>
@@ -50,7 +54,7 @@ const Index = () => {
       <div className="pt-24 h-screen flex">
         {/* 3D Solar System */}
         <div className="flex-1 relative">
-          <SolarSystem onPlanetClick={handlePlanetClick} />
+          <SolarSystem onPlanetClick={handlePlanetClick} selectedPlanetId={selectedPlanetId} />
           
           {/* Instructions Overlay */}
           <div className="absolute bottom-4 left-4 bg-card/90 backdrop-blur border border-border rounded-lg p-4 max-w-xs">
