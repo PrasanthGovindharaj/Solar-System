@@ -77,12 +77,47 @@ function PlanetMesh({ planet, onClick, isSelected }: PlanetMeshProps) {
         <sphereGeometry args={[planet.size, 64, 64]} />
         <meshStandardMaterial
           map={texture}
-          emissive={planet.id === "sun" ? new THREE.Color(planet.color) : undefined}
+          emissive={planet.id === "sun" ? new THREE.Color("#FFA500") : new THREE.Color(planet.color)}
           emissiveMap={planet.id === "sun" ? texture : undefined}
-          emissiveIntensity={planet.id === "sun" ? 1.5 : 0}
-          roughness={0.8}
-          metalness={0.2}
+          emissiveIntensity={planet.id === "sun" ? 2.5 : 0.1}
+          roughness={planet.id === "sun" ? 0.1 : 0.7}
+          metalness={planet.id === "sun" ? 0.8 : 0.3}
         />
+        
+        {/* Intense Sun glow layers */}
+        {planet.id === "sun" && (
+          <>
+            <mesh scale={1.1}>
+              <sphereGeometry args={[planet.size, 32, 32]} />
+              <meshBasicMaterial
+                color="#FFA500"
+                transparent
+                opacity={0.5}
+                side={THREE.BackSide}
+              />
+            </mesh>
+            <mesh scale={1.2}>
+              <sphereGeometry args={[planet.size, 32, 32]} />
+              <meshBasicMaterial
+                color="#FF8C00"
+                transparent
+                opacity={0.3}
+                side={THREE.BackSide}
+              />
+            </mesh>
+            <mesh scale={1.35}>
+              <sphereGeometry args={[planet.size, 32, 32]} />
+              <meshBasicMaterial
+                color="#FFD700"
+                transparent
+                opacity={0.15}
+                side={THREE.BackSide}
+              />
+            </mesh>
+            {/* Sun point light */}
+            <pointLight position={[0, 0, 0]} intensity={5} color="#FDB813" distance={100} decay={2} />
+          </>
+        )}
         
         {/* Atmospheric glow for certain planets */}
         {(planet.id === "earth" || planet.id === "jupiter" || planet.id === "saturn") && (
@@ -91,7 +126,20 @@ function PlanetMesh({ planet, onClick, isSelected }: PlanetMeshProps) {
             <meshBasicMaterial
               color={planet.color}
               transparent
-              opacity={0.15}
+              opacity={0.2}
+              side={THREE.BackSide}
+            />
+          </mesh>
+        )}
+        
+        {/* Venus glow */}
+        {planet.id === "venus" && (
+          <mesh scale={1.08}>
+            <sphereGeometry args={[planet.size, 32, 32]} />
+            <meshBasicMaterial
+              color="#FFC649"
+              transparent
+              opacity={0.25}
               side={THREE.BackSide}
             />
           </mesh>
@@ -228,9 +276,10 @@ export default function SolarSystem({ onPlanetClick, selectedPlanetId = null }: 
         <color attach="background" args={["#0a0e1a"]} />
         
         {/* Lighting */}
-        <ambientLight intensity={0.2} />
-        <pointLight position={[0, 0, 0]} intensity={3} color="#FDB813" />
-        <pointLight position={[50, 50, 50]} intensity={0.3} color="#4169E1" />
+        <ambientLight intensity={0.3} />
+        <pointLight position={[0, 0, 0]} intensity={4} color="#FDB813" distance={200} />
+        <pointLight position={[50, 50, 50]} intensity={0.4} color="#4169E1" />
+        <hemisphereLight intensity={0.2} color="#ffffff" groundColor="#1a1a2e" />
         
         {/* Enhanced starfield */}
         <Stars
@@ -278,10 +327,11 @@ export default function SolarSystem({ onPlanetClick, selectedPlanetId = null }: 
           onClick={() => {
             setLocalSelectedPlanet(null);
             onPlanetClick("");
+            toast.info("View reset to solar system overview");
           }}
-          className="absolute top-4 left-4 bg-card/95 backdrop-blur border border-border rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+          className="absolute top-4 left-4 bg-card/95 backdrop-blur border border-border rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent transition-all hover:scale-105 shadow-lg animate-fade-in"
         >
-          Reset View
+          ← Back to Overview
         </button>
       )}
     </div>
