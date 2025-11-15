@@ -81,7 +81,7 @@ function PlanetMesh({ planet, onClick, isSelected }: PlanetMeshProps) {
           emissiveMap={planet.id === "sun" ? texture : undefined}
           emissiveIntensity={planet.id === "sun" ? 2.5 : 0.1}
           roughness={planet.id === "sun" ? 0.1 : 0.7}
-          metalness={planet.id === "sun" ? 0.8 : 0.3}
+          metalness={planet.id === "sun" ? 0.8 : 0.3} 
         />
         
         {/* Intense Sun glow layers */}
